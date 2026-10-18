@@ -1,6 +1,5 @@
 import { cacheLife } from "next/cache";
 import Papa from "papaparse";
-import { skillGroups as fallbackGroups } from "./site";
 import type { SkillGroup } from "./types";
 
 function normalize(text: string) {
@@ -8,14 +7,21 @@ function normalize(text: string) {
 }
 
 export async function getSkillGroups(): Promise<SkillGroup[]> {
+  const url = process.env.SKILLS_CSV_URL?.trim();
+  if (!url) {
+    console.warn("SKILLS_CSV_URL belum diatur, daftar teknologi tidak dimuat.");
+    return [];
+  }
+
+  return getSkillGroupsFromUrl(url);
+}
+
+async function getSkillGroupsFromUrl(url: string): Promise<SkillGroup[]> {
   "use cache";
   cacheLife("hours");
 
-  const url = process.env.SKILLS_CSV_URL;
-  if (!url) return fallbackGroups;
-
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const { data } = Papa.parse<Record<string, string>>(await res.text(), {
@@ -23,24 +29,24 @@ export async function getSkillGroups(): Promise<SkillGroup[]> {
       skipEmptyLines: true,
     });
 
-    // Kelompokkan skill berdasarkan kategori
+    const categoryAliases = ["kategori", "category", "grup", "group", "title"];
+    const skillAliases = ["skill", "keahlian", "teknologi", "nama", "item", "items"];
     const groups = new Map<string, string[]>();
     for (const row of data) {
       let category = "";
       let skill = "";
       for (const [key, value] of Object.entries(row)) {
         const k = normalize(key);
-        if (["kategori", "category", "grup", "group"].includes(k)) category = value.trim();
-        if (["skill", "keahlian", "teknologi", "nama", "item"].includes(k)) skill = value.trim();
+        if (categoryAliases.includes(k)) category = value?.trim() ?? "";
+        if (skillAliases.includes(k)) skill = value?.trim() ?? "";
       }
       if (!category || !skill) continue;
       groups.set(category, [...(groups.get(category) ?? []), skill]);
     }
 
-    const result = [...groups].map(([title, items]) => ({ title, items }));
-    return result.length > 0 ? result : fallbackGroups;
+    return [...groups].map(([title, items]) => ({ title, items }));
   } catch (error) {
-    console.error("Gagal membaca sheet skill, memakai data cadangan:", error);
-    return fallbackGroups;
+    console.error("Gagal membaca sheet skill:", error);
+    throw error;
   }
 }

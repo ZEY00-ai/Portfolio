@@ -63,14 +63,21 @@ function toProject(row: Record<string, string>, index: number): Project | null {
 }
 
 export async function getProjects(): Promise<Project[]> {
-  "use cache"; // hasil disimpan supaya CSV tidak diambil di setiap kunjungan
+  const url = process.env.SHEET_CSV_URL?.trim();
+  if (!url) {
+    console.warn("SHEET_CSV_URL belum diatur, memakai data project cadangan.");
+    return fallbackProjects;
+  }
+
+  return getProjectsFromUrl(url);
+}
+
+async function getProjectsFromUrl(url: string): Promise<Project[]> {
+  "use cache"; // URL menjadi bagian kunci cache agar perubahan konfigurasi tidak memakai hasil lama.
   cacheLife("hours"); // lalu diperbarui otomatis tiap beberapa jam
 
-  const url = process.env.SHEET_CSV_URL;
-  if (!url) return fallbackProjects;
-
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const { data } = Papa.parse<Record<string, string>>(await res.text(), {

@@ -1,97 +1,103 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Carousel from "@/components/Carousel";
 import type { Project } from "@/lib/types";
-
-const PAGE_SIZE = 6;
 
 export default function WorkList({ projects }: { projects: Project[] }) {
   const [category, setCategory] = useState("Semua");
-  const [visible, setVisible] = useState(PAGE_SIZE);
 
   const categories = useMemo(() => {
-    const set = new Set(projects.map((p) => p.category).filter(Boolean));
+    const set = new Set(projects.map((project) => project.category).filter(Boolean));
     return set.size > 1 ? ["Semua", ...(set as Set<string>)] : [];
   }, [projects]);
-
   const filtered = projects.filter(
-    (p) => category === "Semua" || p.category === category,
+    (project) => category === "Semua" || project.category === category,
   );
-  const shown = filtered.slice(0, visible);
 
   return (
-    <div>
+    <div className="work-wrap">
       {categories.length > 0 && (
         <div className="chips">
-          {categories.map((c) => (
+          {categories.map((item) => (
             <button
-              key={c}
+              key={item}
               type="button"
-              className={`chip ${c === category ? "chip-on" : ""}`}
-              onClick={() => {
-                setCategory(c);
-                setVisible(PAGE_SIZE);
-              }}
+              className={`chip ${item === category ? "chip-on" : ""}`}
+              onClick={() => setCategory(item)}
             >
-              {c}
+              {item}
             </button>
           ))}
         </div>
       )}
 
-      <ol className="work-list">
-        {shown.map((p, i) => (
-          <li key={p.slug} className="work-row">
-            <span className="work-idx">{String(i + 1).padStart(2, "0")}</span>
-
-            <div className="work-main">
-              <h3 className="work-title">{p.title}</h3>
-              {p.description && <p className="work-desc">{p.description}</p>}
-              {p.tech.length > 0 && (
-                <ul className="tags">
-                  {p.tech.map((t) => (
-                    <li key={t}>{t}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
-            <div className="work-side">
-              {(p.category || p.year) && (
-                <span className="work-meta">
-                  {[p.category, p.year].filter(Boolean).join(" · ")}
-                </span>
-              )}
-              <span className="work-links">
-                {p.demoUrl && (
-                  <a href={p.demoUrl} target="_blank" rel="noopener noreferrer">
-                    Demo ↗
-                  </a>
+      {filtered.length > 0 ? (
+        <Carousel
+          key={category}
+          label="proyek"
+          items={filtered.map((project, index) => ({
+            id: project.slug,
+            label: project.title,
+            content: (
+              <article className="work-card">
+                <div className="work-card-heading">
+                  <span className="work-idx">{String(index + 1).padStart(2, "0")}</span>
+                  <div className="work-card-meta">
+                    {(project.category || project.year) && (
+                      <span className="work-meta">
+                        {[project.category, project.year].filter(Boolean).join(" · ")}
+                      </span>
+                    )}
+                    {project.status && (
+                      <span
+                        className={`work-status ${
+                          /complete|selesai/i.test(project.status)
+                            ? "work-status-complete"
+                            : /ongoing|on.?going|progress|berjalan/i.test(project.status)
+                              ? "work-status-ongoing"
+                              : ""
+                        }`}
+                      >
+                        <span aria-hidden="true" />
+                        {project.status}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <h3 className="work-title">{project.title}</h3>
+                {project.description && <p className="work-desc">{project.description}</p>}
+                {project.tech.length > 0 && (
+                  <ul className="tags">
+                    {project.tech.map((technology) => (
+                      <li key={technology}>{technology}</li>
+                    ))}
+                  </ul>
                 )}
-                {p.repoUrl && (
-                  <a href={p.repoUrl} target="_blank" rel="noopener noreferrer">
-                    Kode ↗
-                  </a>
+                {project.image && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img className="work-img" src={project.image} alt={project.title} loading="lazy" />
                 )}
-              </span>
-            </div>
-
-            {p.image && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img className="work-img" src={p.image} alt={p.title} loading="lazy" />
-            )}
-          </li>
-        ))}
-      </ol>
-
-      {filtered.length > visible && (
-        <button
-          type="button"
-          className="more-btn"
-          onClick={() => setVisible((v) => v + PAGE_SIZE)}
-        >
-          Tampilkan {Math.min(PAGE_SIZE, filtered.length - visible)} lagi
-        </button>
+                {(project.demoUrl || project.repoUrl) && (
+                  <div className="work-links">
+                    {project.demoUrl && (
+                      <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
+                        Demo <span aria-hidden="true">↗</span>
+                      </a>
+                    )}
+                    {project.repoUrl && (
+                      <a href={project.repoUrl} target="_blank" rel="noopener noreferrer">
+                        Kode <span aria-hidden="true">↗</span>
+                      </a>
+                    )}
+                  </div>
+                )}
+              </article>
+            ),
+          }))}
+        />
+      ) : (
+        <p className="skills-empty">Belum ada proyek untuk kategori ini.</p>
       )}
     </div>
   );

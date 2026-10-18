@@ -1,4 +1,22 @@
-import type { SkillGroup } from "./types"
+type EducationEntry = {
+  level: string;
+  institution: string;
+  period: string;
+  current?: boolean;
+};
+
+const education: EducationEntry[] = [
+  { level: "TK", institution: "TK Aisyiyah BA Pakan Sinayan", period: "2011–2012" },
+  { level: "SD", institution: "SDN 18 Koto Tangah", period: "2012–2018" },
+  { level: "SMP", institution: "SMPN 1 Tilatang Kamang", period: "2018–2021" },
+  { level: "SMA", institution: "SMAN 1 Kamang Magek", period: "2021–2024" },
+  {
+    level: "Kuliah",
+    institution: "Politeknik Negeri Padang",
+    period: "2024–sekarang",
+    current: true,
+  },
+];
 
 export const site = {
     name: "Daffa Abrar",
@@ -14,12 +32,9 @@ export const site = {
     "Saya Daffa, mahasiswa politeknik di Indonesia. Selain mengerjakan tugas kuliah, saya membangun project web pribadi sebagai pembelajaran.",
     "saya biasanya memekai framework laravel, dan saya sedang belajar flutter, vue.js, next.js, reach.",
   ],
+    education,
+    interests: [
+      "Bermain Game",
+      "beberapa olahraga",
+    ],
 }
-
-export const skillGroups: SkillGroup[] = [
-  { title: "Backend", items: ["Laravel", "CodeIgniter 4", "PHP", "Node.js"] },
-  { title: "Frontend", items: ["React", "Vue.js", "Inertia.js", "Tailwind CSS"] },
-  { title: "Database", items: ["MySQL"] },
-  { title: "Deploy", items: ["Vercel", "AWS EC2", "Docker"] },
-];
-
