@@ -1,69 +1,120 @@
-import Image from "next/image";
+import ThemeToggle from "@/components/ThemeToggle";
+import WorkList from "@/components/WorkList";
+import { getProjects } from "@/lib/projects";
+import { getSkillGroups } from "@/lib/skills";
+import { site } from "@/lib/site";
 
-export default function Home() {
+export default async function Home() {
+  // Dua sheet diambil bersamaan
+  const [projects, skillGroups] = await Promise.all([
+    getProjects(),
+    getSkillGroups(),
+  ]);
+
+  // Angka statistik dihitung dari spreadsheet
+  const techCount = new Set(projects.flatMap((p) => p.tech)).size;
+  const demoCount = projects.filter((p) => p.demoUrl).length;
+
+  const stats = [
+    { value: projects.length, label: "Project" },
+    { value: techCount, label: "Teknologi dipakai" },
+    { value: demoCount, label: "Live demo" },
+  ];
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <>
+      <header className="nav">
+        <div className="wrap nav-inner">
+          <a href="#top" className="brand">{site.name}</a>
+          <nav className="nav-links" aria-label="Navigasi utama">
+            <a href="#work">Project</a>
+            <a href="#skills">Skill</a>
+            <a href="#contact">Kontak</a>
+          </nav>
+          <ThemeToggle />
+        </div>
+      </header>
+
+      <main id="top">
+        <section className="wrap hero">
+          <p className="eyebrow">{site.role}</p>
+          <h1 className="hero-title">{site.name}</h1>
+          <p className="hero-headline">{site.headline}</p>
+          <p className="hero-intro">{site.intro}</p>
+          <div className="hero-cta">
+            <a className="btn btn-solid" href="#contact">Hubungi saya</a>
+            {site.resumeUrl && <a className="btn" href={site.resumeUrl}>Unduh CV</a>}
+            {site.github && (
+              <a className="btn" href={site.github} target="_blank" rel="noopener noreferrer">
+                GitHub
+              </a>
+            )}
+          </div>
+
+          <dl className="stats">
+            {stats.map((s) => (
+              <div key={s.label} className="stat">
+                <dd className="stat-value">{s.value}</dd>
+                <dt className="stat-label">{s.label}</dt>
+              </div>
+            ))}
+          </dl>
+        </section>
+
+        <section id="work" className="wrap section">
+          <p className="eyebrow">Project</p>
+          <h2 className="section-title">Karya terpilih</h2>
+          <p className="section-sub">
+            Daftar ini dibaca langsung dari spreadsheet, jadi selalu mengikuti data terbaru.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+          <WorkList projects={projects} />
+        </section>
+
+        <section id="skills" className="wrap section">
+          <p className="eyebrow">Skill</p>
+          <h2 className="section-title">Teknologi yang saya pakai</h2>
+          <div className="skill-grid">
+            {skillGroups.map((g) => (
+              <div key={g.title} className="skill-card">
+                <h3>{g.title}</h3>
+                <ul className="tags">
+                  {g.items.map((i) => (
+                    <li key={i}>{i}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section id="contact" className="wrap section contact">
+          <p className="eyebrow">Kontak</p>
+          <h2 className="section-title">Mari bekerja sama</h2>
+          <p className="section-sub">
+            Punya ide, butuh website, atau mau ngobrol soal project? Kirim pesan saja.
+          </p>
+          <div className="hero-cta">
+            {site.email && (
+              <a className="btn btn-solid" href={`mailto:${site.email}`}>{site.email}</a>
+            )}
+            {site.linkedin && (
+              <a className="btn" href={site.linkedin} target="_blank" rel="noopener noreferrer">
+                LinkedIn
+              </a>
+            )}
+            {site.github && (
+              <a className="btn" href={site.github} target="_blank" rel="noopener noreferrer">
+                GitHub
+              </a>
+            )}
+          </div>
+        </section>
       </main>
-    </div>
+
+      <footer className="wrap footer">
+        <span>© {site.name} · {site.location}</span>
+        <a href="#top">Kembali ke atas ↑</a>
+      </footer>
+    </>
   );
 }
