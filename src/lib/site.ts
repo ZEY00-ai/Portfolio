@@ -20,7 +20,7 @@ const education: EducationEntry[] = [
 
 export const site = {
     name: "Daffa Abrar",
-    role: "Web Developer",
+    role: "Full Stack Developer -ongoing-",
     location: "Kecamatan Tilatang Kamang, Kabupaten Agam, Provinsi Sumatera Barat, Indonesia.",
     headline: "Membangun aplikasi web yang rapi, cepat, dan berguna.",
     intro:  "Mahasiswa Politeknik Negeri padang",
