@@ -66,9 +66,6 @@ export default async function Home() {
             <p className="eyebrow">01</p>
             <div>
               <h2 className="section-title">Profil</h2>
-              <p className="about-subtitle">
-                Ringkasan singkat mengenai siapa saya, latar belakang, dan cara kerja.
-              </p>
             </div>
           </header>
           <div className="about-layout">
@@ -130,7 +127,7 @@ export default async function Home() {
 
         <section id="work" className="wrap section showcase">
           <p className="eyebrow">Project</p>
-          <h2 className="section-title">Karya terpilih</h2>
+          <h2 className="section-title">Karya Yang Pernah Saya Kerjakan</h2>
           <WorkList projects={projects} />
           <div id="skills" className="showcase-skills">
             <p className="eyebrow">Skill</p>
