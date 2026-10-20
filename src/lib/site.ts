@@ -27,10 +27,10 @@ export const site = {
     email: "daffaabrar630@gmail.com",
     github: "https://github.com/ZEY00-ai",
     linkedin: "https://www.linkedin.com/in/daffa-abrar-77bb29323/",
-    resumeUrl: "",
+    resumeUrl: "/cv-daffa-abrar.pdf",
     about: [
     "Saya Daffa, mahasiswa politeknik di Indonesia. Selain mengerjakan tugas kuliah, saya membangun project web pribadi sebagai pembelajaran.",
-    "saya biasanya memekai framework laravel, dan saya sedang belajar flutter, vue.js, next.js, reach.",
+    "saya biasanya menggunakan framework laravel, dan saya sedang belajar flutter, vue.js, next.js, reach.",
   ],
     education,
     interests: [
