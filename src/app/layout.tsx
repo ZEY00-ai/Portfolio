@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
+import WelcomeIntro from "@/components/WelcomeIntro";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -25,7 +26,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body>{children}</body>
+      <body>
+        <WelcomeIntro />
+        {children}
+      </body>
     </html>
   );
 }

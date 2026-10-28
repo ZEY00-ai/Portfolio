@@ -20,6 +20,35 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Menghubungkan Galeri Google Drive
+
+Galeri memakai Google Drive API key untuk membaca foto dari tiga folder Drive. Pengunjung tidak perlu login, dan API key hanya dipakai server. Pratinjau gambar disajikan melalui route server galeri yang mencoba beberapa URL thumbnail publik, sehingga browser tidak perlu membuka URL Google Drive langsung. Tidak ada fitur tambah, ubah, atau hapus foto.
+
+1. Pastikan **Google Drive API** aktif di project Google Cloud.
+2. Buat **API key** lewat **APIs & Services → Credentials → Create credentials → API key**. Pada API restrictions, pilih **Restrict key** dan centang **Google Drive API**. Untuk penggunaan lokal, Application restrictions dapat sementara dipilih **None**.
+3. Bagikan setiap folder sebagai **Siapa saja yang memiliki link — Viewer/Pelihat**.
+4. Tambahkan API key dan URL folder berikut ke `.env.local` di root project:
+
+   ```env
+   GOOGLE_DRIVE_API_KEY=API_KEY_ANDA
+   SMA_GDRIVE_URL=https://drive.google.com/drive/folders/ID_FOLDER_SMA
+   KULIAH_GDRIVE_URL=https://drive.google.com/drive/folders/ID_FOLDER_KULIAH
+   PRIBADI_GDRIVE_URL=https://drive.google.com/drive/folders/ID_FOLDER_PRIBADI
+   ```
+
+5. Restart server lokal dengan `npm run dev`. Untuk deployment, tambahkan keempat environment variable ke pengaturan hosting lalu deploy ulang.
+
+Halaman Galeri menampilkan folder SMA, Kuliah, dan Pribadi sebagai bagian terpisah. Pastikan file gambar berada langsung di setiap folder.
+
+### Jika galeri menampilkan HTTP 403
+
+- Pastikan `GOOGLE_DRIVE_API_KEY` adalah API key, bukan OAuth Client ID/Secret.
+- Pastikan Google Drive API aktif pada project yang sama dengan key dan key mengizinkan Google Drive API.
+- Request dibuat dari server, jadi jangan gunakan batasan **Websites/HTTP referrers**; pilih **None** untuk tes lokal.
+- Pastikan setiap folder dibagikan sebagai **Siapa saja yang memiliki link — Viewer/Pelihat**.
+- Setelah mengubah `.env.local`, restart server pengembangan.
+- Jangan kirim API key ke chat atau commit ke Git.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

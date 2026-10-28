@@ -1,4 +1,7 @@
 import Image from "next/image";
+import ImageAssetPreloader from "@/components/ImageAssetPreloader";
+import ScrollReveal from "@/components/ScrollReveal";
+import SiteHeader from "@/components/SiteHeader";
 import ThemeToggle from "@/components/ThemeToggle";
 import WorkList from "@/components/WorkList";
 import { getProjects } from "@/lib/projects";
@@ -10,18 +13,14 @@ export default async function Home() {
 
   return (
     <>
-      <header className="nav">
-        <div className="wrap nav-inner">
-          <a href="#top" className="brand">{site.name}</a>
-          <nav className="nav-links" aria-label="Navigasi utama">
-            <a href="#top">Beranda</a>
-            <a href="#about">Tentang</a>
-            <a href="#work">Project</a>
-            <a href="#contact">Kontak</a>
-          </nav>
-          {site.resumeUrl && <a className="nav-resume" href={site.resumeUrl}>CV <span aria-hidden="true">↗</span></a>}
-        </div>
-      </header>
+      <ImageAssetPreloader
+        sources={[
+          "/foto-daffa.jpg",
+          ...projects.flatMap((project) => (project.image ? [project.image] : [])),
+        ]}
+        readyAttribute="data-portfolio-assets-ready"
+      />
+      <SiteHeader />
 
       <main id="top">
         <section className="hero">
@@ -69,7 +68,7 @@ export default async function Home() {
 
         <section id="about" className="section about">
           <div className="wrap about-layout">
-            <div className="about-copy">
+            <ScrollReveal className="about-copy">
               <header className="about-heading">
                 <p className="eyebrow"><span>02</span> TENTANG SAYA</p>
                 <h2 className="section-title">Belajar lewat karya.</h2>
@@ -95,9 +94,9 @@ export default async function Home() {
                   ))}
                 </ul>
               </div>
-            </div>
+            </ScrollReveal>
 
-            <div className="education-panel">
+            <ScrollReveal className="education-panel" delay={140}>
               {site.education.length > 0 && (
                 <div className="education-history">
                   <div className="education-heading">
@@ -135,38 +134,40 @@ export default async function Home() {
                   Saat ini menempuh pendidikan di {currentEducation.institution}.
                 </p>
               )}
-            </div>
+            </ScrollReveal>
           </div>
         </section>
 
         <section id="work" className="section showcase">
           <div className="wrap">
-            <div className="showcase-heading">
+            <ScrollReveal className="showcase-heading">
               <div>
                 <p className="eyebrow"><span>03</span> DARI MEJA BELAJAR</p>
                 <h2 className="section-title">Project yang punya cerita.</h2>
               </div>
               <p className="showcase-note">Kumpulan karya dari proses belajar dan eksplorasi saya.</p>
-            </div>
-            <WorkList projects={projects} />
+            </ScrollReveal>
+            <ScrollReveal className="work-reveal" delay={120}>
+              <WorkList projects={projects} />
+            </ScrollReveal>
           </div>
         </section>
 
         <section id="contact" className="contact">
           <div className="wrap contact-inner">
-            <div className="contact-copy">
+            <ScrollReveal className="contact-copy">
               <p className="eyebrow"><span>04</span> LANGKAH SELANJUTNYA</p>
               <h2 className="section-title">Ada ide?<br />Mari ngobrol.</h2>
               <p className="section-sub">Terbuka untuk bertukar ide, belajar bersama, atau membahas project.</p>
-            </div>
-            <div className="contact-panel">
+            </ScrollReveal>
+            <ScrollReveal className="contact-panel" delay={140}>
               <span className="contact-panel-label">TEMUKAN SAYA DI</span>
               <div className="contact-links">
                 {site.email && <a className="contact-link contact-link-email" href={`mailto:${site.email}`}><span>Email</span><strong>{site.email}</strong><span className="contact-link-arrow" aria-hidden="true">↗</span></a>}
                 {site.linkedin && <a className="contact-link" href={site.linkedin} target="_blank" rel="noopener noreferrer"><span>LinkedIn</span><strong>Terhubung di LinkedIn</strong><span className="contact-link-arrow" aria-hidden="true">↗</span></a>}
                 {site.github && <a className="contact-link" href={site.github} target="_blank" rel="noopener noreferrer"><span>GitHub</span><strong>Lihat project di GitHub</strong><span className="contact-link-arrow" aria-hidden="true">↗</span></a>}
               </div>
-            </div>
+            </ScrollReveal>
           </div>
           <footer className="wrap footer">
             <span><span className="footer-mark" aria-hidden="true">+</span> {site.name} · Portfolio Indonesia</span>
