@@ -38,10 +38,10 @@ export default function ThemeToggle() {
       type="button"
       className="theme-btn"
       onClick={toggle}
-      aria-label="Ganti tema terang atau gelap"
+      aria-label={theme === "dark" ? "Ganti ke tema terang" : "Ganti ke tema gelap"}
       suppressHydrationWarning
     >
-      {theme === "dark" ? "Terang" : "Gelap"}
+      <span aria-hidden="true">{theme === "dark" ? "☾" : "☀"}</span>
     </button>
   );
 }

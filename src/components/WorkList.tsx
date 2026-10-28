@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Carousel from "@/components/Carousel";
 import type { Project } from "@/lib/types";
 
 export default function WorkList({ projects }: { projects: Project[] }) {
@@ -33,71 +32,55 @@ export default function WorkList({ projects }: { projects: Project[] }) {
       )}
 
       {filtered.length > 0 ? (
-        <Carousel
-          key={category}
-          label="proyek"
-          items={filtered.map((project, index) => ({
-            id: project.slug,
-            label: project.title,
-            content: (
-              <article className="work-card">
-                <div className="work-card-heading">
-                  <span className="work-idx">{String(index + 1).padStart(2, "0")}</span>
-                  <div className="work-card-meta">
-                    {(project.category || project.year) && (
-                      <span className="work-meta">
-                        {[project.category, project.year].filter(Boolean).join(" · ")}
-                      </span>
-                    )}
-                    {project.status && (
-                      <span
-                        className={`work-status ${
-                          /complete|selesai/i.test(project.status)
-                            ? "work-status-complete"
-                            : /ongoing|on.?going|progress|berjalan/i.test(project.status)
-                              ? "work-status-ongoing"
-                              : ""
-                        }`}
-                      >
-                        <span aria-hidden="true" />
-                        {project.status}
-                      </span>
-                    )}
-                  </div>
+        <div className="work-list" aria-label="Daftar project">
+          {filtered.map((project, index) => (
+            <article className="work-card" key={project.slug}>
+              {project.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img className="work-img" src={project.image} alt={project.title} loading="lazy" />
+              ) : (
+                <div className="work-art">
+                  <span className="work-art-index" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="work-art-label">PROJECT</span>
+                </div>
+              )}
+              <div className="work-card-content">
+                <div className="work-row-meta">
+                  {[project.category, project.year].filter(Boolean).join(" · ")}
+                  {project.status && <span>{project.status}</span>}
                 </div>
                 <h3 className="work-title">{project.title}</h3>
                 {project.description && <p className="work-desc">{project.description}</p>}
                 {project.tech.length > 0 && (
-                  <ul className="tags">
-                    {project.tech.map((technology) => (
-                      <li key={technology}>{technology}</li>
+                  <p className="work-tech" aria-label="Teknologi">
+                    {project.tech.map((technology, techIndex) => (
+                      <span key={technology}>
+                        {techIndex > 0 && <span className="work-tech-separator" aria-hidden="true">·</span>}
+                        {technology}
+                      </span>
                     ))}
-                  </ul>
+                  </p>
                 )}
-                {project.image && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img className="work-img" src={project.image} alt={project.title} loading="lazy" />
-                )}
-                {(project.demoUrl || project.repoUrl) && (
-                  <div className="work-links">
-                    {project.demoUrl && (
-                      <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
-                        Demo <span aria-hidden="true">↗</span>
-                      </a>
-                    )}
-                    {project.repoUrl && (
-                      <a href={project.repoUrl} target="_blank" rel="noopener noreferrer">
-                        Kode <span aria-hidden="true">↗</span>
-                      </a>
-                    )}
-                  </div>
-                )}
-              </article>
-            ),
-          }))}
-        />
+                <div className="work-links">
+                  {project.demoUrl && (
+                    <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
+                      Demo <span aria-hidden="true">↗</span>
+                    </a>
+                  )}
+                  {project.repoUrl && (
+                    <a href={project.repoUrl} target="_blank" rel="noopener noreferrer">
+                      Source <span aria-hidden="true">↗</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
       ) : (
-        <p className="skills-empty">Belum ada proyek untuk kategori ini.</p>
+        <p className="empty-note">Belum ada project di kategori ini.</p>
       )}
     </div>
   );

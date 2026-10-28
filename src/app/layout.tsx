@@ -9,27 +9,19 @@ export const metadata: Metadata = {
   description: site.headline,
 };
 
-// Skrip kecil ini jalan sebelum halaman tampil, supaya tema tersimpan
-// langsung terpasang dan layar tidak berkedip.
 const themeScript = `
 (function () {
   try {
-    var saved = localStorage.getItem("theme");
-    var dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    document.documentElement.dataset.theme = saved || (dark ? "dark" : "light");
-  } catch (e) {
-    document.documentElement.dataset.theme = "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  } catch {
+    document.documentElement.dataset.theme = "dark";
   }
 })();
 `;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="id"
-      suppressHydrationWarning
-      className={`${GeistSans.variable} ${GeistMono.variable}`}
-    >
+    <html lang="id" suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>

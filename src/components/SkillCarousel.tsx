@@ -1,4 +1,3 @@
-import Carousel from "@/components/Carousel";
 import type { SkillGroup } from "@/lib/types";
 
 export default function SkillCarousel({ groups }: { groups: SkillGroup[] }) {
@@ -12,23 +11,18 @@ export default function SkillCarousel({ groups }: { groups: SkillGroup[] }) {
   }
 
   return (
-    <Carousel
-      label="skill"
-      items={groups.map((group) => ({
-        id: group.title,
-        label: group.title,
-        content: (
-          <article className="skill-card">
-            <p className="skill-card-index">KEAHLIAN</p>
-            <h3>{group.title}</h3>
-            <ul className="tags">
-              {group.items.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </article>
-        ),
-      }))}
-    />
+    <div className="skill-grid">
+      {groups.map((group, index) => (
+        <article className="skill-card" key={group.title}>
+          <p className="skill-card-index">{String(index + 1).padStart(2, "0")}</p>
+          <h3>{group.title}</h3>
+          <ul className="tags">
+            {group.items.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
   );
 }

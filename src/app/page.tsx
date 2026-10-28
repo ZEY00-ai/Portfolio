@@ -1,25 +1,12 @@
 import Image from "next/image";
 import ThemeToggle from "@/components/ThemeToggle";
 import WorkList from "@/components/WorkList";
-import SkillCarousel from "@/components/SkillCarousel";
-import AboutPortrait from "@/components/AboutPortrait";
 import { getProjects } from "@/lib/projects";
-import { getSkillGroups } from "@/lib/skills";
 import { site } from "@/lib/site";
 
-const contactImages = [
-  "/forKontak/foto-daffa.jpg",
-  "/forKontak/1729416146088.jpg",
-  "/forKontak/1729416146078.jpg",
-  "/forKontak/1729416145117.jpg",
-];
-
 export default async function Home() {
-  // Dua sheet diambil bersamaan
-  const [projects, skillGroups] = await Promise.all([
-    getProjects(),
-    getSkillGroups(),
-  ]);
+  const projects = await getProjects();
+  const currentEducation = site.education.find((item) => item.current);
 
   return (
     <>
@@ -27,59 +14,96 @@ export default async function Home() {
         <div className="wrap nav-inner">
           <a href="#top" className="brand">{site.name}</a>
           <nav className="nav-links" aria-label="Navigasi utama">
+            <a href="#top">Beranda</a>
             <a href="#about">Tentang</a>
             <a href="#work">Project</a>
-            <a href="#skills">Skill</a>
             <a href="#contact">Kontak</a>
           </nav>
-          <ThemeToggle />
+          {site.resumeUrl && <a className="nav-resume" href={site.resumeUrl}>CV <span aria-hidden="true">↗</span></a>}
         </div>
       </header>
 
       <main id="top">
-        <section className="wrap hero">
-          <h1 className="hero-title">{site.name}</h1>
-          <ul className="hero-roles" aria-label="Peran">
-            <li>Mahasiswa Sistem Informasi</li>
-            <li>Web Developer</li>
-            <li>Mobile Developer(ongoing)</li>
-          </ul>
-          <p className="hero-headline">{site.headline}</p>
-          <p className="hero-intro">{site.intro}</p>
-          <div className="hero-cta">
-            <a className="btn btn-solid" href="#contact">Hubungi saya</a>
-            {site.resumeUrl && <a className="btn" href={site.resumeUrl}>Unduh CV</a>}
-            {site.github && (
-              <a className="btn" href={site.github} target="_blank" rel="noopener noreferrer">
-                GitHub
-              </a>
-            )}
+        <section className="hero">
+          <div className="hero-inner wrap">
+            <div className="hero-copy">
+              <p className="hero-greeting"><span className="hero-greeting-mark" aria-hidden="true" />Halo, saya {site.name}</p>
+              <h1 className="hero-title">
+                <span>Mahasiswa</span>
+                <span>Sistem Informasi</span>
+                <span className="hero-title-last"><span className="hero-title-join">dan</span> <span className="hero-title-accent">Web Developer</span></span>
+              </h1>
+              <p className="hero-intro">{site.headline}</p>
+              <div className="hero-actions">
+                <a className="hero-primary-link" href="#work">
+                  Lihat project <span aria-hidden="true">↘</span>
+                </a>
+                <a className="hero-secondary-link" href="#about">Kenali saya</a>
+              </div>
+              <p className="hero-index"><span>01</span> PORTFOLIO PERSONAL</p>
+            </div>
+
+            <div className="hero-portrait">
+              <Image
+                className="hero-portrait-img"
+                src="/foto-daffa.jpg"
+                alt={`Potret ${site.name}`}
+                width={600}
+                height={800}
+                sizes="(max-width: 760px) 42vw, 36vw"
+                loading="eager"
+              />
+              <div className="hero-photo-caption">
+                <span>BERBASIS DI</span>
+                <p>{site.location}</p>
+              </div>
+              <span className="hero-photo-index" aria-hidden="true">DA</span>
+            </div>
+
+            <a className="hero-scroll" href="#about">
+              <span>JELAJAHI PORTFOLIO</span>
+              <span aria-hidden="true">↓</span>
+            </a>
           </div>
-          <a className="hero-scroll" href="#about">
-            <span>Scroll untuk menjelajah</span>
-            <span className="hero-scroll-arrow" aria-hidden="true">↓</span>
-          </a>
         </section>
 
-        <section id="about" className="wrap section about">
-          <header className="about-heading">
-            <p className="eyebrow">01</p>
-            <div>
-              <h2 className="section-title">Profil</h2>
-            </div>
-          </header>
-          <div className="about-layout">
-            <AboutPortrait
-              location={site.location}
-              focus={site.role}
-            />
+        <section id="about" className="section about">
+          <div className="wrap about-layout">
             <div className="about-copy">
-              {site.about.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
+              <header className="about-heading">
+                <p className="eyebrow"><span>02</span> TENTANG SAYA</p>
+                <h2 className="section-title">Belajar lewat karya.</h2>
+              </header>
+              <div className="about-story">
+                {site.about.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </div>
+              <div className="profile-interests">
+                <div className="profile-interests-heading">
+                  <h3>Minat &amp; Aktivitas</h3>
+                  <span>DI LUAR KULIAH</span>
+                </div>
+                <ul className="interest-list">
+                  {site.interests.map((interest, index) => (
+                    <li key={interest}>
+                      <span className="interest-index" aria-hidden="true">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span>{interest}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="education-panel">
               {site.education.length > 0 && (
                 <div className="education-history">
-                  <h3>Riwayat Pendidikan</h3>
+                  <div className="education-heading">
+                    <p className="eyebrow">LANGKAH DEMI LANGKAH</p>
+                    <h3>Riwayat pendidikan</h3>
+                  </div>
                   <div className="education-table-wrap">
                     <table className="education-table">
                       <thead>
@@ -105,77 +129,54 @@ export default async function Home() {
                   </div>
                 </div>
               )}
-              <div className="profile-interests">
-                <div className="profile-interests-heading">
-                  <h3>Minat &amp; Aktivitas</h3>
-                  <span>DI LUAR KULIAH</span>
-                </div>
-                <ul className="interest-list">
-                  {site.interests.map((interest, index) => (
-                    <li key={interest}>
-                      <span className="interest-index" aria-hidden="true">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <span>{interest}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {currentEducation && (
+                <p className="education-note">
+                  <span aria-hidden="true">↗</span>
+                  Saat ini menempuh pendidikan di {currentEducation.institution}.
+                </p>
+              )}
             </div>
           </div>
         </section>
 
-        <section id="work" className="wrap section showcase">
-          <p className="eyebrow">Project</p>
-          <h2 className="section-title">Karya Yang Pernah Saya Kerjakan</h2>
-          <WorkList projects={projects} />
-          <div id="skills" className="showcase-skills">
-            <p className="eyebrow">Skill</p>
-            <h2 className="section-title">Teknologi yang saya pakai</h2>
-            <SkillCarousel groups={skillGroups} />
+        <section id="work" className="section showcase">
+          <div className="wrap">
+            <div className="showcase-heading">
+              <div>
+                <p className="eyebrow"><span>03</span> DARI MEJA BELAJAR</p>
+                <h2 className="section-title">Project yang punya cerita.</h2>
+              </div>
+              <p className="showcase-note">Kumpulan karya dari proses belajar dan eksplorasi saya.</p>
+            </div>
+            <WorkList projects={projects} />
           </div>
         </section>
 
-        <section id="contact" className="wrap section contact">
-          <div className="contact-collage" aria-hidden="true" inert>
-            {Array.from({ length: 10 }, (_, index) => (
-              <div className="contact-collage-photo" key={index}>
-                <Image
-                  src={contactImages[index % contactImages.length]}
-                  alt=""
-                  fill
-                  sizes="(max-width: 640px) 28vw, 18vw"
-                />
+        <section id="contact" className="contact">
+          <div className="wrap contact-inner">
+            <div className="contact-copy">
+              <p className="eyebrow"><span>04</span> LANGKAH SELANJUTNYA</p>
+              <h2 className="section-title">Ada ide?<br />Mari ngobrol.</h2>
+              <p className="section-sub">Terbuka untuk bertukar ide, belajar bersama, atau membahas project.</p>
+            </div>
+            <div className="contact-panel">
+              <span className="contact-panel-label">TEMUKAN SAYA DI</span>
+              <div className="contact-links">
+                {site.email && <a className="contact-link contact-link-email" href={`mailto:${site.email}`}><span>Email</span><strong>{site.email}</strong><span className="contact-link-arrow" aria-hidden="true">↗</span></a>}
+                {site.linkedin && <a className="contact-link" href={site.linkedin} target="_blank" rel="noopener noreferrer"><span>LinkedIn</span><strong>Terhubung di LinkedIn</strong><span className="contact-link-arrow" aria-hidden="true">↗</span></a>}
+                {site.github && <a className="contact-link" href={site.github} target="_blank" rel="noopener noreferrer"><span>GitHub</span><strong>Lihat project di GitHub</strong><span className="contact-link-arrow" aria-hidden="true">↗</span></a>}
               </div>
-            ))}
+            </div>
           </div>
-          <p className="eyebrow">Kontak</p>
-          <h2 className="section-title">Mari bekerja sama</h2>
-          <p className="section-sub">
-            Punya ide, butuh website, atau mau ngobrol soal project? Kirim pesan saja.
-          </p>
-          <div className="hero-cta">
-            {site.email && (
-              <a className="btn btn-solid" href={`mailto:${site.email}`}>{site.email}</a>
-            )}
-            {site.linkedin && (
-              <a className="btn" href={site.linkedin} target="_blank" rel="noopener noreferrer">
-                LinkedIn
-              </a>
-            )}
-            {site.github && (
-              <a className="btn" href={site.github} target="_blank" rel="noopener noreferrer">
-                GitHub
-              </a>
-            )}
-          </div>
+          <footer className="wrap footer">
+            <span><span className="footer-mark" aria-hidden="true">+</span> {site.name} · Portfolio Indonesia</span>
+            <span className="footer-location">{site.location}</span>
+            <a href="#top">Kembali ke atas ↑</a>
+          </footer>
         </section>
       </main>
 
-      <footer className="wrap footer">
-        <span>© {site.name} · {site.location}</span>
-        <a href="#top">Kembali ke atas ↑</a>
-      </footer>
+      <ThemeToggle />
     </>
   );
 }
