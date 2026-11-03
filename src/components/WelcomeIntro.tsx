@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useSyncExternalStore } from "react";
+import { LocalizedText, useLanguage } from "@/components/LanguageProvider";
 
 function subscribeToReadiness(attribute: string, callback: () => void) {
   const observer = new MutationObserver(callback);
@@ -42,6 +43,7 @@ export default function WelcomeIntro() {
 }
 
 function WelcomeScreen({ isGallery }: { isGallery: boolean }) {
+  const { language } = useLanguage();
   const assetsReady = useSyncExternalStore(
     isGallery ? subscribeToGalleryPreload : subscribeToPortfolioAssets,
     isGallery ? isGalleryPreloaded : arePortfolioAssetsReady,
@@ -62,28 +64,34 @@ function WelcomeScreen({ isGallery }: { isGallery: boolean }) {
 
         <div className="welcome-message">
           <p className="welcome-kicker">
-            {isGallery ? "CERITA DALAM SETIAP FOTO" : "HALO, SELAMAT DATANG"}
+            {isGallery
+              ? language === "id" ? "CERITA DALAM SETIAP FOTO" : "A STORY IN EVERY PHOTO"
+              : language === "id" ? "HALO, SELAMAT DATANG" : "HELLO, WELCOME"}
           </p>
           <p className="welcome-title">
-            Welcome to my
-            <span>{isGallery ? "Gallery." : "Portfolio Website."}</span>
+            {language === "id" ? "Selamat datang di" : "Welcome to my"}
+            <span>{isGallery ? "Gallery." : language === "id" ? "Website Portfolio." : "Portfolio Website."}</span>
           </p>
           <div className="welcome-progress" />
           <p className="welcome-byline">
             {isGallery ? "SMA" : "Daffa Abrar"} <span>·</span>{" "}
-            {isGallery ? "KULIAH · PRIBADI" : "Web Developer"}
+            {isGallery ? language === "id" ? "KULIAH · PRIBADI" : "SCHOOL · PERSONAL" : "Web Developer"}
           </p>
         </div>
 
         <div className="welcome-bottomline">
           <span>
             {isGallery ? (
-              <>MOMEN <i>·</i> CERITA <i>·</i> KENANGAN</>
+              language === "id"
+                ? <>MOMEN <i>·</i> CERITA <i>·</i> KENANGAN</>
+                : <>MOMENTS <i>·</i> STORIES <i>·</i> MEMORIES</>
             ) : (
               <>DESIGN <i>·</i> CODE <i>·</i> LEARN</>
             )}
           </span>
-          <span>{isGallery ? "GALERI FOTO" : "SELAMAT MENJELAJAH"}</span>
+          <span>{isGallery
+            ? <LocalizedText id="GALERI FOTO" en="PHOTO GALLERY" />
+            : <LocalizedText id="SELAMAT MENJELAJAH" en="HAPPY EXPLORING" />}</span>
         </div>
       </div>
       <span className="welcome-orbit" />

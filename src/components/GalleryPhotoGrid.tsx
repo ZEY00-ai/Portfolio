@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import GalleryPhoto from "@/components/GalleryPhoto";
+import { useLanguage } from "@/components/LanguageProvider";
 import type { GalleryImage } from "@/lib/gallery";
 
 const PAGE_SIZE = 6;
@@ -13,6 +14,7 @@ export default function GalleryPhotoGrid({
   images: GalleryImage[];
   title: string;
 }) {
+  const { language } = useLanguage();
   const [page, setPage] = useState(0);
   const pageCount = Math.ceil(images.length / PAGE_SIZE);
   const visibleImages = images.slice(
@@ -56,11 +58,11 @@ export default function GalleryPhotoGrid({
         ))}
       </div>
       {pageCount > 1 ? (
-        <nav className="gallery-pagination" aria-label={`Halaman foto ${title}`}>
+        <nav className="gallery-pagination" aria-label={`${language === "id" ? "Halaman foto" : "Photo page"} ${title}`}>
           <p aria-live="polite">
-            <span className="gallery-pagination-label">MENAMPILKAN</span>
+            <span className="gallery-pagination-label">{language === "id" ? "MENAMPILKAN" : "SHOWING"}</span>
             <strong>{String(firstItem).padStart(2, "0")}–{String(lastItem).padStart(2, "0")}</strong>
-            <span className="gallery-pagination-total">/ {String(images.length).padStart(2, "0")} FOTO</span>
+            <span className="gallery-pagination-total">/ {String(images.length).padStart(2, "0")} {language === "id" ? "FOTO" : "PHOTOS"}</span>
           </p>
           <div className="gallery-pagination-controls">
             <button
@@ -68,18 +70,18 @@ export default function GalleryPhotoGrid({
               type="button"
               onClick={() => changePage(page - 1)}
               disabled={page === 0}
-              aria-label="Foto sebelumnya"
+              aria-label={language === "id" ? "Foto sebelumnya" : "Previous photo"}
             >
               <span aria-hidden="true">←</span>
             </button>
-            <div className="gallery-pagination-pages" aria-label="Pilih halaman">
+            <div className="gallery-pagination-pages" aria-label={language === "id" ? "Pilih halaman" : "Choose page"}>
               {Array.from({ length: pageCount }, (_, index) => (
               <button
                 className="gallery-page-number"
                 type="button"
                 key={index}
                 onClick={() => changePage(index)}
-                aria-label={`Halaman ${index + 1}`}
+                aria-label={`${language === "id" ? "Halaman" : "Page"} ${index + 1}`}
                 aria-current={page === index ? "page" : undefined}
               >
                 {index + 1}
@@ -91,7 +93,7 @@ export default function GalleryPhotoGrid({
               type="button"
               onClick={() => changePage(page + 1)}
               disabled={page === pageCount - 1}
-              aria-label="Foto berikutnya"
+              aria-label={language === "id" ? "Foto berikutnya" : "Next photo"}
             >
               <span aria-hidden="true">→</span>
             </button>

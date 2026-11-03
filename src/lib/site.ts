@@ -29,8 +29,11 @@ export const site = {
     linkedin: "https://www.linkedin.com/in/daffa-abrar-77bb29323/",
     resumeUrl: "/cv-daffa-abrar.pdf",
     about: [
-    "Saya Daffa, mahasiswa politeknik di Indonesia. Selain mengerjakan tugas kuliah, saya membangun project web pribadi sebagai pembelajaran.",
-    "saya biasanya menggunakan framework laravel, dan saya sedang belajar flutter, vue.js, next.js, reach.",
+    "Halo! Saya Daffa",
+    "Formula harian saya: 70% Backend, 30% Frontend, bantuan prompty-prompty AI pas logic-nya mulai buntu, dan sisanya ahli memanfaatkan waktu rebahan secara maksimal.",
+    "Sebagai penikmat software development, saya lebih betah ngurusin arsitektur data dan alur sistem di belakang layar.",
+    "saya tetap pastikan visualnya clean dan enak dilihat.",
+    "Portofolio ini memuat beberapa proyek yang pernah saya kerjakan. Feel free buat keliling, dan kalau ada yang mau dikolaborasikan, kirim pesan aja ya!",
   ],
     education,
     interests: [

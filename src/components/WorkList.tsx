@@ -1,9 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { LocalizedText, useLanguage } from "@/components/LanguageProvider";
 import type { Project } from "@/lib/types";
 
 export default function WorkList({ projects }: { projects: Project[] }) {
+  const { language } = useLanguage();
   const [category, setCategory] = useState("Semua");
   const [tech, setTech] = useState("Semua");
 
@@ -34,7 +36,7 @@ export default function WorkList({ projects }: { projects: Project[] }) {
               className={`chip ${item === category ? "chip-on" : ""}`}
               onClick={() => setCategory(item)}
             >
-              {item}
+              {item === "Semua" && language === "en" ? "All" : item}
             </button>
           ))}
 
@@ -43,9 +45,9 @@ export default function WorkList({ projects }: { projects: Project[] }) {
               className={`chip chip-select ${tech !== "Semua" ? "chip-on" : ""}`}
               value={tech}
               onChange={(event) => setTech(event.target.value)}
-              aria-label="Filter berdasarkan teknologi"
+              aria-label={language === "id" ? "Filter berdasarkan teknologi" : "Filter by technology"}
             >
-              <option value="Semua">Semua Tech</option>
+              <option value="Semua">{language === "id" ? "Semua Tech" : "All technologies"}</option>
               {techs.map((item) => (
                 <option key={item} value={item}>
                   {item}
@@ -57,7 +59,7 @@ export default function WorkList({ projects }: { projects: Project[] }) {
       )}
 
       {filtered.length > 0 ? (
-        <div className="work-list" aria-label="Daftar project">
+        <div className="work-list" aria-label={language === "id" ? "Daftar project" : "Project list"}>
           {filtered.map((project, index) => (
             <article className="work-card" key={project.slug}>
               {project.image ? (
@@ -96,7 +98,7 @@ export default function WorkList({ projects }: { projects: Project[] }) {
                   )}
                   {project.repoUrl && (
                     <a href={project.repoUrl} target="_blank" rel="noopener noreferrer">
-                      Source <span aria-hidden="true">↗</span>
+                      <LocalizedText id="Source" en="Source" /> <span aria-hidden="true">↗</span>
                     </a>
                   )}
                 </div>
@@ -105,7 +107,7 @@ export default function WorkList({ projects }: { projects: Project[] }) {
           ))}
         </div>
       ) : (
-        <p className="empty-note">Belum ada project untuk filter ini.</p>
+        <p className="empty-note"><LocalizedText id="Belum ada project untuk filter ini." en="No projects match this filter." /></p>
       )}
     </div>
   );

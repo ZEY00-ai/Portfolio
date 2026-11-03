@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { connection } from "next/server";
 import GalleryPhotoGrid from "@/components/GalleryPhotoGrid";
 import ImageAssetPreloader from "@/components/ImageAssetPreloader";
+import { LocalizedText } from "@/components/LanguageProvider";
 import ScrollReveal from "@/components/ScrollReveal";
 import SiteHeader from "@/components/SiteHeader";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -19,9 +20,9 @@ export default function GalleryPage() {
       <SiteHeader active="gallery" />
       <main className="gallery-page">
         <section className="gallery-intro wrap">
-          <p className="eyebrow"><span>05</span> GALERI</p>
+          <p className="eyebrow"><span>05</span> <LocalizedText id="GALERI" en="GALLERY" /></p>
           <div className="gallery-heading">
-            <h1>Potongan cerita.</h1>
+            <h1><LocalizedText id="Potongan cerita." en="Stories in frames." /></h1>
           </div>
         </section>
         <Suspense fallback={<GalleryLoading />}>
@@ -55,15 +56,15 @@ async function GalleryContent() {
         <div className="gallery-message" role="status">
           <span className="gallery-message-mark" aria-hidden="true">↗</span>
           <div>
-            <h2>Galeri belum terhubung.</h2>
-              <p>Album foto belum tersedia saat ini.</p>
+            <h2><LocalizedText id="Galeri belum terhubung." en="Gallery is not connected yet." /></h2>
+              <p><LocalizedText id="Album foto belum tersedia saat ini." en="No photo albums are available right now." /></p>
           </div>
         </div>
       ) : gallery.status === "error" ? (
         <div className="gallery-message" role="status">
           <span className="gallery-message-mark" aria-hidden="true">!</span>
           <div>
-            <h2>Google Drive belum bisa diakses.</h2>
+            <h2><LocalizedText id="Google Drive belum bisa diakses." en="Google Drive is unavailable." /></h2>
             <p>{gallery.message}</p>
           </div>
         </div>
@@ -89,7 +90,7 @@ function GallerySection({ collection }: { collection: GalleryCollection }) {
           <div className="gallery-collection-actions">
             <p className="gallery-count">
               <span>{String(collection.images.length).padStart(2, "0")}</span>
-              {" "}FOTO
+              {" "}<LocalizedText id="FOTO" en="PHOTOS" />
             </p>
             {collection.folderUrl ? (
               <a
@@ -98,7 +99,7 @@ function GallerySection({ collection }: { collection: GalleryCollection }) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Buka folder Drive <span aria-hidden="true">↗</span>
+                <LocalizedText id="Buka folder Drive" en="Open Drive folder" /> <span aria-hidden="true">↗</span>
               </a>
             ) : null}
           </div>
@@ -114,7 +115,7 @@ function GallerySection({ collection }: { collection: GalleryCollection }) {
       ) : (
         <p className="gallery-collection-message">
           {collection.status === "setup"
-            ? "Album ini sedang disiapkan."
+            ? <LocalizedText id="Album ini sedang disiapkan." en="This album is being prepared." />
             : collection.message}
         </p>
       )}
@@ -128,8 +129,8 @@ function GalleryLoading() {
       <div className="gallery-message" role="status" aria-live="polite">
         <span className="gallery-message-mark" aria-hidden="true">…</span>
         <div>
-          <h2>Menghubungkan galeri.</h2>
-          <p>Foto dari Google Drive sedang dimuat.</p>
+          <h2><LocalizedText id="Menghubungkan galeri." en="Connecting to the gallery." /></h2>
+          <p><LocalizedText id="Foto dari Google Drive sedang dimuat." en="Photos from Google Drive are loading." /></p>
         </div>
       </div>
     </section>
