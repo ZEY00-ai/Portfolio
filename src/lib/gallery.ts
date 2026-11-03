@@ -175,10 +175,19 @@ function getDriveErrorMessage(error: unknown): string {
       : "Google menolak akses Drive (HTTP 403). Pastikan API key valid, Google Drive API aktif, dan folder dibagikan sebagai Viewer.";
   }
   if (status === 400) {
-    if (reason === "keyInvalid" || reason === "API_KEY_INVALID") {
+    const apiMessage =
+      error instanceof DriveApiError ? error.apiMessage?.toLowerCase() : null;
+    if (
+      reason === "keyInvalid" ||
+      reason === "API_KEY_INVALID" ||
+      apiMessage?.includes("api key not valid")
+    ) {
       return "Google menolak API key. Pastikan GOOGLE_DRIVE_API_KEY berisi API key, bukan OAuth Client ID/Secret.";
     }
-    return "Google menolak permintaan. Pastikan API key valid dan Google Drive API aktif.";
+    if (error instanceof DriveApiError && error.apiMessage) {
+      return `Google menolak permintaan (HTTP 400): ${error.apiMessage}`;
+    }
+    return "Google menolak permintaan (HTTP 400). Periksa API key dan format URL folder.";
   }
   if (status === 429) {
     return "Batas permintaan Google Drive tercapai. Coba lagi nanti.";

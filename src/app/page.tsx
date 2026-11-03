@@ -157,8 +157,8 @@ export default async function Home() {
           <div className="wrap contact-inner">
             <ScrollReveal className="contact-copy">
               <p className="eyebrow"><span>04</span> LANGKAH SELANJUTNYA</p>
-              <h2 className="section-title">Ada ide?<br />Mari ngobrol.</h2>
-              <p className="section-sub">Terbuka untuk bertukar ide, belajar bersama, atau membahas project.</p>
+              <h2 className="section-title">kontak Saya?<br/></h2>
+              <p className="section-sub">Selalu Senang Diajak Diskusi Pengerjaan Project, atau Sekedar Sharing.</p>
             </ScrollReveal>
             <ScrollReveal className="contact-panel" delay={140}>
               <span className="contact-panel-label">TEMUKAN SAYA DI</span>
