@@ -661,6 +661,11 @@ button { font: inherit; }
 }
 .chip:hover { border-color: var(--accent); color: var(--ink); }
 .chip-on { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
+.chip-select { color-scheme: inherit; }
+.chip-select option {
+  background-color: var(--canvas);
+  color: #fff;
+}
 .work-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .work-card {
   display: grid;

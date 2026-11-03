@@ -5,18 +5,27 @@ import type { Project } from "@/lib/types";
 
 export default function WorkList({ projects }: { projects: Project[] }) {
   const [category, setCategory] = useState("Semua");
+  const [tech, setTech] = useState("Semua");
 
   const categories = useMemo(() => {
     const set = new Set(projects.map((project) => project.category).filter(Boolean));
     return set.size > 1 ? ["Semua", ...(set as Set<string>)] : [];
   }, [projects]);
+
+  const techs = useMemo(() => {
+    const set = new Set(projects.flatMap((project) => project.tech));
+    return [...set].sort((a, b) => a.localeCompare(b));
+  }, [projects]);
+
   const filtered = projects.filter(
-    (project) => category === "Semua" || project.category === category,
+    (project) =>
+      (category === "Semua" || project.category === category) &&
+      (tech === "Semua" || project.tech.includes(tech)),
   );
 
   return (
     <div className="work-wrap">
-      {categories.length > 0 && (
+      {(categories.length > 0 || techs.length > 0) && (
         <div className="chips">
           {categories.map((item) => (
             <button
@@ -28,6 +37,22 @@ export default function WorkList({ projects }: { projects: Project[] }) {
               {item}
             </button>
           ))}
+
+          {techs.length > 0 && (
+            <select
+              className={`chip chip-select ${tech !== "Semua" ? "chip-on" : ""}`}
+              value={tech}
+              onChange={(event) => setTech(event.target.value)}
+              aria-label="Filter berdasarkan teknologi"
+            >
+              <option value="Semua">Semua Tech</option>
+              {techs.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
       )}
 
@@ -80,7 +105,7 @@ export default function WorkList({ projects }: { projects: Project[] }) {
           ))}
         </div>
       ) : (
-        <p className="empty-note">Belum ada project di kategori ini.</p>
+        <p className="empty-note">Belum ada project untuk filter ini.</p>
       )}
     </div>
   );
