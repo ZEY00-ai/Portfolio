@@ -74,7 +74,7 @@ export async function getProjects(): Promise<Project[]> {
 
 async function getProjectsFromUrl(url: string): Promise<Project[]> {
   "use cache"; // URL menjadi bagian kunci cache agar perubahan konfigurasi tidak memakai hasil lama.
-  cacheLife("hours"); // lalu diperbarui otomatis tiap beberapa jam
+  cacheLife({ stale: 300, revalidate: 300, expire: 3600 });
 
   try {
     const res = await fetch(url, { cache: "no-store" });

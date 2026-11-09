@@ -14,12 +14,12 @@ export const metadata: Metadata = {
 const themeScript = `
 (function () {
   try {
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
     const language = localStorage.getItem("language") === "en" ? "en" : "id";
     document.documentElement.dataset.language = language;
     document.documentElement.lang = language;
   } catch {
-    document.documentElement.dataset.theme = "dark";
+    document.documentElement.dataset.theme = "light";
     document.documentElement.dataset.language = "id";
     document.documentElement.lang = "id";
   }

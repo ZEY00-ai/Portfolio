@@ -4,10 +4,13 @@ import { useMemo, useState } from "react";
 import { LocalizedText, useLanguage } from "@/components/LanguageProvider";
 import type { Project } from "@/lib/types";
 
+const PAGE_SIZE = 4;
+
 export default function WorkList({ projects }: { projects: Project[] }) {
   const { language } = useLanguage();
   const [category, setCategory] = useState("Semua");
   const [tech, setTech] = useState("Semua");
+  const [page, setPage] = useState(0);
 
   const categories = useMemo(() => {
     const set = new Set(projects.map((project) => project.category).filter(Boolean));
@@ -24,6 +27,10 @@ export default function WorkList({ projects }: { projects: Project[] }) {
       (category === "Semua" || project.category === category) &&
       (tech === "Semua" || project.tech.includes(tech)),
   );
+  const pageCount = Math.ceil(filtered.length / PAGE_SIZE);
+  const visibleProjects = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+  const firstItem = page * PAGE_SIZE + 1;
+  const lastItem = Math.min((page + 1) * PAGE_SIZE, filtered.length);
 
   return (
     <div className="work-wrap">
@@ -34,7 +41,10 @@ export default function WorkList({ projects }: { projects: Project[] }) {
               key={item}
               type="button"
               className={`chip ${item === category ? "chip-on" : ""}`}
-              onClick={() => setCategory(item)}
+              onClick={() => {
+                setCategory(item);
+                setPage(0);
+              }}
             >
               {item === "Semua" && language === "en" ? "All" : item}
             </button>
@@ -44,7 +54,10 @@ export default function WorkList({ projects }: { projects: Project[] }) {
             <select
               className={`chip chip-select ${tech !== "Semua" ? "chip-on" : ""}`}
               value={tech}
-              onChange={(event) => setTech(event.target.value)}
+              onChange={(event) => {
+                setTech(event.target.value);
+                setPage(0);
+              }}
               aria-label={language === "id" ? "Filter berdasarkan teknologi" : "Filter by technology"}
             >
               <option value="Semua">{language === "id" ? "Semua Tech" : "All technologies"}</option>
@@ -60,7 +73,7 @@ export default function WorkList({ projects }: { projects: Project[] }) {
 
       {filtered.length > 0 ? (
         <div className="work-list" aria-label={language === "id" ? "Daftar project" : "Project list"}>
-          {filtered.map((project, index) => (
+          {visibleProjects.map((project, index) => (
             <article className="work-card" key={project.slug}>
               {project.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -68,7 +81,7 @@ export default function WorkList({ projects }: { projects: Project[] }) {
               ) : (
                 <div className="work-art">
                   <span className="work-art-index" aria-hidden="true">
-                    {String(index + 1).padStart(2, "0")}
+                    {String(page * PAGE_SIZE + index + 1).padStart(2, "0")}
                   </span>
                   <span className="work-art-label">PROJECT</span>
                 </div>
@@ -108,6 +121,47 @@ export default function WorkList({ projects }: { projects: Project[] }) {
         </div>
       ) : (
         <p className="empty-note"><LocalizedText id="Belum ada project untuk filter ini." en="No projects match this filter." /></p>
+      )}
+      {pageCount > 1 && (
+        <nav className="gallery-pagination" aria-label={language === "id" ? "Halaman project" : "Project pages"}>
+          <p aria-live="polite">
+            <span className="gallery-pagination-label">{language === "id" ? "MENAMPILKAN" : "SHOWING"}</span>
+            <strong>{String(firstItem).padStart(2, "0")}–{String(lastItem).padStart(2, "0")}</strong>
+            <span className="gallery-pagination-total">/ {String(filtered.length).padStart(2, "0")} {language === "id" ? "PROJECT" : "PROJECTS"}</span>
+          </p>
+          <div className="gallery-pagination-controls">
+            <button
+              type="button"
+              onClick={() => setPage(page - 1)}
+              disabled={page === 0}
+              aria-label={language === "id" ? "Halaman sebelumnya" : "Previous page"}
+            >
+              <span aria-hidden="true">←</span>
+            </button>
+            <div className="gallery-pagination-pages" aria-label={language === "id" ? "Pilih halaman" : "Choose page"}>
+              {Array.from({ length: pageCount }, (_, index) => (
+                <button
+                  className="gallery-page-number"
+                  type="button"
+                  key={index}
+                  onClick={() => setPage(index)}
+                  aria-label={`${language === "id" ? "Halaman" : "Page"} ${index + 1}`}
+                  aria-current={page === index ? "page" : undefined}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => setPage(page + 1)}
+              disabled={page === pageCount - 1}
+              aria-label={language === "id" ? "Halaman berikutnya" : "Next page"}
+            >
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </nav>
       )}
     </div>
   );

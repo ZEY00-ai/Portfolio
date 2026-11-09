@@ -1,28 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: dark;
-  --canvas: #0b1426;
-  --canvas-raised: #111f35;
-  --ink: #f2f6fc;
-  --muted: #aab8cb;
-  --line: rgb(226 236 250 / 14%);
-  --accent: #a9ccff;
-  --accent-ink: #0b1426;
+  color-scheme: light;
+  --canvas: #F3EEE3;
+  --canvas-raised: #EAE3D6;
+  --ink: #111111;
+  --muted: #655E55;
+  --line: rgb(17 17 17 / 15%);
+  --accent: #D9541E;
+  --accent-ink: #111111;
   --font-ui: var(--font-geist-sans), Inter, ui-sans-serif, system-ui, sans-serif;
   --page-max-width: 1200px;
   --nav-height: 76px;
 }
 
-:root[data-theme="light"] {
-  color-scheme: light;
-  --canvas: #f2f5f9;
-  --canvas-raised: #e8eef6;
-  --ink: #17263c;
-  --muted: #56677e;
-  --line: rgb(23 38 60 / 15%);
-  --accent: #4778b8;
-  --accent-ink: #fff;
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #111111;
+  --canvas-raised: #201B17;
+  --ink: #F3EEE3;
+  --muted: #B6AA9B;
+  --line: rgb(243 238 227 / 15%);
 }
 
 @theme inline {
@@ -708,7 +706,7 @@ button { font: inherit; }
 .chip-select { color-scheme: inherit; }
 .chip-select option {
   background-color: var(--canvas);
-  color: #fff;
+  color: var(--ink);
 }
 .work-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .work-card {
@@ -782,7 +780,7 @@ button { font: inherit; }
 .contact .eyebrow { color: color-mix(in srgb, var(--accent-ink) 68%, transparent); }
 .contact .section-title { margin: 0 0 12px; font-size: clamp(44px, 6vw, 72px); }
 .section-sub { max-width: 420px; margin: 0; color: color-mix(in srgb, var(--accent-ink) 78%, transparent); font-size: 13px; }
-.contact-panel { padding: clamp(20px, 3vw, 30px); background: var(--accent-ink); color: var(--ink); }
+.contact-panel { padding: clamp(20px, 3vw, 30px); background: var(--ink); color: var(--canvas); }
 .contact-panel-label { display: block; margin-bottom: 12px; color: var(--accent); }
 .contact-links { display: grid; }
 .contact-link {
@@ -794,8 +792,8 @@ button { font: inherit; }
   padding: 15px 0;
   border-top: 1px solid var(--line);
 }
-.contact-link > span:first-child { color: var(--muted); font-size: 10px; }
-.contact-link strong { overflow: hidden; color: var(--ink); font-size: 11px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.contact-link > span:first-child { color: color-mix(in srgb, var(--canvas) 68%, transparent); font-size: 10px; }
+.contact-link strong { overflow: hidden; color: var(--canvas); font-size: 11px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
 .contact-link-arrow { color: var(--accent); font-size: 16px; transition: transform 0.2s ease; }
 .contact-link:hover .contact-link-arrow { transform: translate(3px, -3px); }
 
