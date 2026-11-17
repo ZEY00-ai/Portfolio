@@ -4,14 +4,14 @@ import { site } from "@/lib/site";
 import { LocalizedText, useLanguage } from "@/components/LanguageProvider";
 
 type SiteHeaderProps = {
-  active?: "gallery";
+  active?: "gallery" | "project";
 };
 
 export default function SiteHeader({ active }: SiteHeaderProps) {
   const { language, setLanguage } = useLanguage();
   const isGallery = active === "gallery";
   const sectionLink = (section: string) =>
-    isGallery ? `/#${section}` : `#${section}`;
+    active ? `/#${section}` : `#${section}`;
 
   return (
     <header className="nav">

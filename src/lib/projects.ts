@@ -8,6 +8,35 @@ import type { Project } from "./types";
 const ALIASES = {
   title: ["title", "judul", "nama", "namaproject", "project", "name"],
   description: ["description", "deskripsi", "desc", "keterangan", "ringkasan"],
+  documentation: [
+    "documentation",
+    "dokumentasi",
+    "docs",
+    "panduan",
+    "readme",
+    "manual",
+  ],
+  documentationUrl: [
+    "documentationurl",
+    "dokumentasiurl",
+    "linkdokumentasi",
+    "linkdocs",
+    "docsurl",
+    "readmeurl",
+  ],
+  videoUrl: [
+    "videourl",
+    "video",
+    "demovideo",
+    "demovideourl",
+    "videodemo",
+    "youtube",
+    "youtubeurl",
+    "linkvideo",
+    "linkdemovideo",
+  ],
+  driveUrl: ["driveurl", "linkdrive", "folderurl"],
+  driveId: ["driveid", "folderid"],
   tech: ["tech", "teknologi", "stack", "techstack", "tools", "bahasa"],
   demoUrl: ["demo", "demourl", "link", "url", "website", "live", "linkdemo"],
   repoUrl: ["repo", "repourl", "github", "source", "linkrepo", "linkgithub"],
@@ -49,6 +78,11 @@ function toProject(row: Record<string, string>, index: number): Project | null {
     slug: slugify(title, index),
     title,
     description: pick(row, "description"),
+    documentation: pick(row, "documentation"),
+    documentationUrl: pick(row, "documentationUrl"),
+    videoUrl: pick(row, "videoUrl"),
+    driveUrl: pick(row, "driveUrl"),
+    driveId: pick(row, "driveId"),
     tech: (pick(row, "tech") ?? "")
       .split(/[,;|]/)
       .map((t) => t.trim())

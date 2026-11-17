@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { LocalizedText, useLanguage } from "@/components/LanguageProvider";
 import type { Project } from "@/lib/types";
 
@@ -74,35 +75,42 @@ export default function WorkList({ projects }: { projects: Project[] }) {
       {filtered.length > 0 ? (
         <div className="work-list" aria-label={language === "id" ? "Daftar project" : "Project list"}>
           {visibleProjects.map((project, index) => (
-            <article className="work-card" key={project.slug}>
-              {project.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img className="work-img" src={project.image} alt={project.title} loading="lazy" />
-              ) : (
-                <div className="work-art">
-                  <span className="work-art-index" aria-hidden="true">
-                    {String(page * PAGE_SIZE + index + 1).padStart(2, "0")}
-                  </span>
-                  <span className="work-art-label">PROJECT</span>
-                </div>
-              )}
-              <div className="work-card-content">
-                <div className="work-row-meta">
-                  {[project.category, project.year].filter(Boolean).join(" · ")}
-                  {project.status && <span>{project.status}</span>}
-                </div>
-                <h3 className="work-title">{project.title}</h3>
-                {project.description && <p className="work-desc">{project.description}</p>}
-                {project.tech.length > 0 && (
-                  <p className="work-tech" aria-label="Teknologi">
-                    {project.tech.map((technology, techIndex) => (
-                      <span key={technology}>
-                        {techIndex > 0 && <span className="work-tech-separator" aria-hidden="true">·</span>}
-                        {technology}
-                      </span>
-                    ))}
-                  </p>
+            <article
+              className={`work-card ${project.demoUrl || project.repoUrl ? "work-card-with-links" : ""}`}
+              key={project.slug}
+            >
+              <Link className="work-card-link" href={`/projects/${project.slug}`}>
+                {project.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img className="work-img" src={project.image} alt={project.title} loading="lazy" />
+                ) : (
+                  <div className="work-art">
+                    <span className="work-art-index" aria-hidden="true">
+                      {String(page * PAGE_SIZE + index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="work-art-label">PROJECT</span>
+                  </div>
                 )}
+                <div className="work-card-content">
+                  <div className="work-row-meta">
+                    {[project.category, project.year].filter(Boolean).join(" · ")}
+                    {project.status && <span>{project.status}</span>}
+                  </div>
+                  <h3 className="work-title">{project.title}</h3>
+                  {project.description && <p className="work-desc">{project.description}</p>}
+                  {project.tech.length > 0 && (
+                    <p className="work-tech" aria-label="Teknologi">
+                      {project.tech.map((technology, techIndex) => (
+                        <span key={technology}>
+                          {techIndex > 0 && <span className="work-tech-separator" aria-hidden="true">·</span>}
+                          {technology}
+                        </span>
+                      ))}
+                    </p>
+                  )}
+                </div>
+              </Link>
+              {(project.demoUrl || project.repoUrl) && (
                 <div className="work-links">
                   {project.demoUrl && (
                     <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
@@ -115,7 +123,7 @@ export default function WorkList({ projects }: { projects: Project[] }) {
                     </a>
                   )}
                 </div>
-              </div>
+              )}
             </article>
           ))}
         </div>
