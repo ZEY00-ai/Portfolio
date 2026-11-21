@@ -103,29 +103,29 @@ export async function getProjects(): Promise<Project[]> {
     return fallbackProjects;
   }
 
-  return getProjectsFromUrl(url);
+  try {
+    return await getProjectsFromUrl(url);
+  } catch (error) {
+    console.error("Gagal membaca spreadsheet, memakai data cadangan:", error);
+    return fallbackProjects;
+  }
 }
 
 async function getProjectsFromUrl(url: string): Promise<Project[]> {
   "use cache"; // URL menjadi bagian kunci cache agar perubahan konfigurasi tidak memakai hasil lama.
   cacheLife({ stale: 300, revalidate: 300, expire: 3600 });
 
-  try {
-    const res = await fetch(url, { cache: "no-store" });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-    const { data } = Papa.parse<Record<string, string>>(await res.text(), {
-      header: true, // baris pertama dianggap nama kolom
-      skipEmptyLines: true,
-    });
+  const { data } = Papa.parse<Record<string, string>>(await res.text(), {
+    header: true, // baris pertama dianggap nama kolom
+    skipEmptyLines: true,
+  });
 
-    const projects = data
-      .map(toProject)
-      .filter((p): p is Project => p !== null);
+  const projects = data
+    .map(toProject)
+    .filter((p): p is Project => p !== null);
 
-    return projects.length > 0 ? projects : fallbackProjects;
-  } catch (error) {
-    console.error("Gagal membaca spreadsheet, memakai data cadangan:", error);
-    return fallbackProjects;
-  }
+  return projects.length > 0 ? projects : fallbackProjects;
 }
